@@ -6,17 +6,7 @@ The truth is, the name JavaScript is an artifact of marketing shenanigans. when 
 
 Why? Because this language was originally designed to appeal to an audience of mostly Java programmers, and because the word "script" was popular at the time to refer to lightweight programs. These lightweight "scripts" would be the first ones to embed inside of pages on this new thing called the web!
 
-Further distancing the language from the Oracle-owned trademark, the official name of the language specified by TC39 and formalized by the ECMA standards body is **ECMAScript**. And indeed, since 2016, the official language name has also been suffixed by the revision year; as of this writing, that's ECMAScript 2019, or otherwise abbreviated ES2019.
-
-In other words, the JavaScript/JS that runs in your browser or in Node.js, is *an* implementation of the ES2019 standard.
-
-| NOTE: |
-| :--- |
-| Don't use terms like "JS6" or "ES8" to refer to the language. Some do, but those terms only serve to perpetuate confusion. "ES20xx" or just "JS" are what you should stick to. |
-
-Whether you call it JavaScript, JS, ECMAScript, or ES2019, it's most definitely not a variant of the Java language!
-
-> "Java is to JavaScript as ham is to hamster." --Jeremy Keith, 2009
+the JavaScript/JS that runs in your browser or in Node.js, is *an* implementation of the ES2019 standard.
 
 ## Language Specification
 
@@ -24,35 +14,9 @@ I mentioned TC39, the technical steering committee that manages JS. Their primar
 
 JS's syntax and behavior are defined in the ES specification.
 
-ES2019 happens to be the 10th major numbered specification/revision since JS's inception in 1995, so in the specification's official URL as hosted by ECMA, you'll find "10.0":
-
-https://www.ecma-international.org/ecma-262/10.0/
-
-The TC39 committee is comprised of between 50 and about 100 different people from a broad section of web-invested companies, such as browser makers (Mozilla, Google, Apple) and device makers (Samsung, etc). All members of the committee are volunteers, though many of them are employees of these companies and so may receive compensation in part for their duties on the committee.
-
-TC39 meets generally about every other month, usually for about three days, to review work done by members since the last meeting, discuss issues, and vote on proposals. Meeting locations rotate among member companies willing to host.
-
-All TC39 proposals progress through a five-stage process—of course, since we're programmers, it's 0-based!—Stage 0 through Stage 4. You can read more about the Stage process here: https://tc39.es/process-document/
-
-Stage 0 means roughly, someone on TC39 thinks it's a worthy idea and plans to champion and work on it. That means lots of ideas that non-TC39 members "propose," through informal means such as social media or blog posts, are really "pre-stage 0." You have to get a TC39 member to champion a proposal for it to be considered "Stage 0" officially.
-
-Once a proposal reaches "Stage 4" status, it is eligible to be included in the next yearly revision of the language. It can take anywhere from several months to a few years for a proposal to work its way through these stages.
-
 All proposals are managed in the open, on TC39's Github repository: https://github.com/tc39/proposals
 
-Anyone, whether on TC39 or not, is welcome to participate in these public discussions and the processes for working on the proposals. However, only TC39 members can attend meetings and vote on the proposals and changes. So in effect, the voice of a TC39 member carries a lot of weight in where JS will go.
-
-Contrary to some established and frustratingly perpetuated myth, there are *not* multiple versions of JavaScript in the wild. There's just **one JS**, the official standard as maintained by TC39 and ECMA.
-
-Back in the early 2000s, when Microsoft maintained a forked and reverse-engineered (and not entirely compatible) version of JS called "JScript," there were legitimately "multiple versions" of JS. But those days are long gone. It's outdated and inaccurate to make such claims about JS today.
-
-All major browsers and device makers have committed to keeping their JS implementations compliant with this one central specification. Of course, engines implement features at different times. But it should never be the case that the v8 engine (Chrome's JS engine) implements a specified feature differently or incompatibly as compared to the SpiderMonkey engine (Mozilla's JS engine).
-
-That means you can learn **one JS**, and rely on that same JS everywhere.
-
 ### The Web Rules Everything About (JS)
-
-While the array of environments that run JS is constantly expanding (from browsers, to servers (Node.js), to robots, to lightbulbs, to...), the one environment that rules JS is the web. In other words, how JS is implemented for web browsers is, in all practicality, the only reality that matters.
 
 For the most part, the JS defined in the specification and the JS that runs in browser-based JS engines is the same. But there are some differences that must be considered.
 
@@ -435,5 +399,3 @@ JS is a multi-paradigm language, meaning the syntax and capabilities allow a dev
 JS is a compiled language, meaning the tools (including the JS engine) process and verify a program (reporting any errors!) before it executes.
 
 With our language now *defined*, let's start getting to know its ins and outs.
-
-[^specApB]: ECMAScript 2019 Language Specification, Appendix B: Additional ECMAScript Features for Web Browsers, https://www.ecma-international.org/ecma-262/10.0/#sec-additional-ecmascript-features-for-web-browsers (latest as of time of this writing in January 2020)
