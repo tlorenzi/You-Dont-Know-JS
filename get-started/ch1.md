@@ -52,107 +52,13 @@ Compare *backwards compatibility* to its counterpart, *forwards compatibility*. 
 
 Since JS is not forwards-compatible, it means that there is always the potential for a gap between code that you can write that's valid JS, and the oldest engine that your site or application needs to support. If you run a program that uses an ES2019 feature in an engine from 2016, you're very likely to see the program break and crash.
 
-If the feature is a new syntax, the program will in general completely fail to compile and run, usually throwing a syntax error. If the feature is an API (such as ES6's `Object.is(..)`), the program may run up to a point but then throw a runtime exception and stop once it encounters the reference to the unknown API.
-
-Does this mean JS developers should always lag behind the pace of progress, using only code that is on the trailing edge of the oldest JS engine environments they need to support? No!
-
-But it does mean that JS developers need to take special care to address this gap.
-
 For new and incompatible syntax, the solution is transpiling. Transpiling is a contrived and community-invented term to describe using a tool to convert the source code of a program from one form to another (but still as textual source code). Typically, forwards-compatibility problems related to syntax are solved by using a transpiler (the most common one being Babel (https://babeljs.io)) to convert from that newer JS syntax version to an equivalent older syntax.
-
-For example, a developer may write a snippet of code like:
-
-```js
-if (something) {
-    let x = 3;
-    console.log(x);
-}
-else {
-    let x = 4;
-    console.log(x);
-}
-```
-
-This is how the code would look in the source code tree for that application. But when producing the file(s) to deploy to the public website, the Babel transpiler might convert that code to look like this:
-
-```js
-var x$0, x$1;
-if (something) {
-    x$0 = 3;
-    console.log(x$0);
-}
-else {
-    x$1 = 4;
-    console.log(x$1);
-}
-```
-
-The original snippet relied on `let` to create block-scoped `x` variables in both the `if` and `else` clauses which did not interfere with each other. An equivalent program (with minimal re-working) that Babel can produce just chooses to name two different variables with unique names, producing the same non-interference outcome.
-
-| NOTE: |
-| :--- |
-| The `let` keyword was added in ES6 (in 2015). The preceding example of transpiling would only need to apply if an application needed to run in a pre-ES6 supporting JS environment. The example here is just for simplicity of illustration. When ES6 was new, the need for such a transpilation was quite prevalent, but in 2020 it's much less common to need to support pre-ES6 environments. The "target" used for transpiliation is thus a sliding window that shifts upward only as decisions are made for a site/application to stop supporting some old browser/engine. |
-
-You may wonder: why go to the trouble of using a tool to convert from a newer syntax version to an older one? Couldn't we just write the two variables and skip using the `let` keyword? The reason is, it's strongly recommended that developers use the latest version of JS so that their code is clean and communicates its ideas most effectively.
-
-Developers should focus on writing the clean, new syntax forms, and let the tools take care of producing a forwards-compatible version of that code that is suitable to deploy and run on the oldest-supported JS engine environments.
 
 ### Filling the Gaps
 
 If the forwards-compatibility issue is not related to new syntax, but rather to a missing API method that was only recently added, the most common solution is to provide a definition for that missing API method that stands in and acts as if the older environment had already had it natively defined. This pattern is called a polyfill (aka "shim").
 
-Consider this code:
-
-```js
-// getSomeRecords() returns us a promise for some
-// data it will fetch
-var pr = getSomeRecords();
-
-// show the UI spinner while we get the data
-startSpinner();
-
-pr
-.then(renderRecords)   // render if successful
-.catch(showError)      // show an error if not
-.finally(hideSpinner)  // always hide the spinner
-```
-
-This code uses an ES2019 feature, the `finally(..)` method on the promise prototype. If this code were used in a pre-ES2019 environment, the `finally(..)` method would not exist, and an error would occur.
-
-A polyfill for `finally(..)` in pre-ES2019 environments could look like this:
-
-```js
-if (!Promise.prototype.finally) {
-    Promise.prototype.finally = function f(fn){
-        return this.then(
-            function t(v){
-                return Promise.resolve( fn() )
-                    .then(function t(){
-                        return v;
-                    });
-            },
-            function c(e){
-                return Promise.resolve( fn() )
-                    .then(function t(){
-                        throw e;
-                    });
-            }
-        );
-    };
-}
-```
-
-| WARNING: |
-| :--- |
-| This is only a simple illustration of a basic (not entirely spec-compliant) polyfill for `finally(..)`. Don't use this polyfill in your code; always use a robust, official polyfill wherever possible, such as the collection of polyfills/shims in ES-Shim. |
-
-The `if` statement protects the polyfill definition by preventing it from running in any environment where the JS engine has already defined that method. In older environments, the polyfill is defined, but in newer environments the `if` statement is quietly skipped.
-
 Transpilers like Babel typically detect which polyfills your code needs and provide them automatically for you. But occasionally you may need to include/define them explicitly, which works similar to the snippet we just looked at.
-
-Always write code using the most appropriate features to communicate its ideas and intent effectively. In general, this means using the most recent stable JS version. Avoid negatively impacting the code's readability by trying to manually adjust for the syntax/API gaps. That's what tools are for!
-
-Transpilation and polyfilling are two highly effective techniques for addressing that gap between code that uses the latest stable features in the language and the old environments a site or application needs to still support. Since JS isn't going to stop improving, the gap will never go away. Both techniques should be embraced as a standard part of every JS project's production chain going forward.
 
 ## What's in an Interpretation?
 
