@@ -62,33 +62,11 @@ Transpilers like Babel typically detect which polyfills your code needs and prov
 
 ## What's in an Interpretation?
 
-A long-debated question for code written in JS: is it an interpreted script or a compiled program? The majority opinion seems to be that JS is an interpreted (scripting) language. But the truth is more complicated than that.
-
-For much of the history of programming languages, "interpreted" languages and "scripting" languages have been looked down on as inferior compared to their compiled counterparts. The reasons for this acrimony are numerous, including the perception that there is a lack of performance optimization, as well as dislike of certain language characteristics, such as scripting languages generally using dynamic typing instead of the "more mature" statically typed languages.
+is JS interpreted script or a compiled program? The majority opinion seems is that JS is an interpreted (scripting) language. But the truth is more complicated than that.
 
 Languages regarded as "compiled" usually produce a portable (binary) representation of the program that is distributed for execution later. Since we don't really observe that kind of model with JS (we distribute the source code, not the binary form), many claim that disqualifies JS from the category. In reality, the distribution model for a program's "executable" form has become drastically more varied and also less relevant over the last few decades; to the question at hand, it doesn't really matter so much anymore what form of a program gets passed around.
 
-These misinformed claims and criticisms should be set aside. The real reason it matters to have a clear picture on whether JS is interpreted or compiled relates to the nature of how errors are handled.
-
-Historically, scripted or interpreted languages were executed in generally a top-down and line-by-line fashion; there's typically not an initial pass through the program to process it before execution begins (see Figure 1).
-
-<figure>
-    <img src="images/fig1.svg" width="650" alt="Interpreting a script to execute it" align="center">
-    <figcaption><em>Fig. 1: Interpreted/Scripted Execution</em></figcaption>
-    <br><br>
-</figure>
-
-In scripted or interpreted languages, an error on line 5 of a program won't be discovered until lines 1 through 4 have already executed. Notably, the error on line 5 might be due to a runtime condition, such as some variable or value having an unsuitable value for an operation, or it may be due to a malformed statement/command on that line. Depending on context, deferring error handling to the line the error occurs on may be a desirable or undesirable effect.
-
-Compare that to languages which do go through a processing step (typically, called parsing) before any execution occurs, as illustrated in Figure 2:
-
-<figure>
-    <img src="images/fig2.svg" width="650" alt="Parsing, compiling, and executing a program" align="center">
-    <figcaption><em>Fig. 2: Parsing + Compilation + Execution</em></figcaption>
-    <br><br>
-</figure>
-
-In this processing model, an invalid command (such as broken syntax) on line 5 would be caught during the parsing phase, before any execution has begun, and none of the program would run. For catching syntax (or otherwise "static") errors, generally it's preferred to know about them ahead of any doomed partial execution.
+The real reason it matters to have a clear picture on whether JS is interpreted or compiled relates to the nature of how errors are handled.
 
 So what do "parsed" languages have in common with "compiled" languages? First, all compiled languages are parsed. So a parsed language is quite a ways down the road toward being compiled already. In classic compilation theory, the last remaining step after parsing is code generation: producing an executable form.
 
