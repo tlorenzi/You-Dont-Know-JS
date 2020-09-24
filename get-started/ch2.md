@@ -1,33 +1,11 @@
 # You Don't Know JS Yet: Get Started - 2nd Edition
 # Chapter 2: Surveying JS
 
-The best way to learn JS is to start writing JS.
-
-To do that, you need to know how the language works, and that's what we'll focus on here. Even if you've programmed in other languages before, take your time getting comfortable with JS, and make sure to practice each piece.
-
-This chapter is not an exhaustive reference on every bit of syntax of the JS language. It's also not intended to be a complete "intro to JS" primer.
-
-Instead, we're just going to survey some of the major topic areas of the language. Our goal is to get a better *feel* for it, so that we can move forward writing our own programs with more confidence. We'll revisit many of these topics in successively more detail as you go through the rest of this book, and the rest of the series.
-
-Please don't expect this chapter to be a quick read. It's long and there's plenty of detail to chew on. Take your time.
-
-| TIP: |
-| :--- |
-| If you're still getting familiar with JS, I suggest you reserve plenty of extra time to work through this chapter. Take each section and ponder and explore the topic for awhile. Look through existing JS programs and compare what you see in them to the code and explanations (and opinions!) presented here. You will get a lot more out of the rest of the book and series with a solid foundation of JS's *nature*. |
-
 ## Each File is a Program
 
-Almost every website (web application) you use is comprised of many different JS files (typically with the .js file extension). It's tempting to think of the whole thing (the application) as one program. But JS sees it differently.
+In JS, each standalone file is its own separate program. The reason this matters is primarily around error handling. Since JS treats files as programs, one file may fail (during parse/compile or execution) and that will not necessarily prevent the next file from being processed. 
 
-In JS, each standalone file is its own separate program.
-
-The reason this matters is primarily around error handling. Since JS treats files as programs, one file may fail (during parse/compile or execution) and that will not necessarily prevent the next file from being processed. Obviously, if your application depends on five .js files, and one of them fails, the overall application will probably only partially operate, at best. It's important to ensure that each file works properly, and that to whatever extent possible, they handle failure in other files as gracefully as possible.
-
-It may surprise you to consider separate .js files as separate JS programs. From the perspective of your usage of an application, it sure seems like one big program. That's because the execution of the application allows these individual *programs* to cooperate and act as one program.
-
-| NOTE: |
-| :--- |
-| Many projects use build process tools that end up combining separate files from the project into a single file to be delivered to a web page. When this happens, JS treats this single combined file as the entire program. |
+Many projects use build process tools that end up combining separate files from the project into a single file to be delivered to a web page. When this happens, JS treats this single combined file as the entire program.
 
 The only way multiple standalone .js files act as a single program is by sharing their state (and access to their public functionality) via the "global scope." They mix together in this global scope namespace, so at runtime they act as as whole.
 
@@ -35,70 +13,11 @@ Since ES6, JS has also supported a module format in addition to the typical stan
 
 Though you wouldn't typically think about a module—a collection of state and publicly exposed methods to operate on that state—as a standalone program, JS does in fact still treat each module separately. Similar to how "global scope" allows standalone files to mix together at runtime, importing a module into another allows runtime interoperation between them.
 
-Regardless of which code organization pattern (and loading mechanism) is used for a file (standalone or module), you should still think of each file as its own (mini) program, which may then cooperate with other (mini) programs to perform the functions of your overall application.
-
 ## Values
 
-The most fundamental unit of information in a program is a value. Values are data. They're how the program maintains state. Values come in two forms in JS: **primitive** and **object**.
+Values come in two forms in JS: **primitive** and **object**. Values are embedded in programs using *literals*:
 
-Values are embedded in programs using *literals*:
-
-```js
-greeting("My name is Kyle.");
-```
-
-In this program, the value `"My name is Kyle."` is a primitive string literal; strings are ordered collections of characters, usually used to represent words and sentences.
-
-I used the double-quote `"` character to *delimit* (surround, separate, define) the string value. But I could have used the single-quote `'` character as well. The choice of which quote character is entirely stylistic. The important thing, for the sake of code readability and maintainability, is to pick one and to use it consistently throughout the program.
-
-Another option to delimit a string literal is to use the back-tick `` ` `` character. However, this choice is not merely stylistic; there's a behavioral difference as well. Consider:
-
-```js
-console.log("My name is ${ firstName }.");
-// My name is ${ firstName }.
-
-console.log('My name is ${ firstName }.');
-// My name is ${ firstName }.
-
-console.log(`My name is ${ firstName }.`);
-// My name is Kyle.
-```
-
-Assuming this program has already defined a variable `firstName` with the string value `"Kyle"`, the `` ` ``-delimited string then resolves the variable expression (indicated with `${ .. }`) to its current value. This is called **interpolation**.
-
-The back-tick `` ` ``-delimited string can be used without including interpolated expressions, but that defeats the whole purpose of that alternate string literal syntax:
-
-```js
-console.log(
-    `Am I confusing you by omitting interpolation?`
-);
-// Am I confusing you by omitting interpolation?
-```
-
-The better approach is to use `"` or `'` (again, pick one and stick to it!) for strings *unless you need* interpolation; reserve `` ` `` only for strings that will include interpolated expressions.
-
-Other than strings, JS programs often contain other primitive literal values such as booleans and numbers:
-
-```js
-while (false) {
-    console.log(3.141592);
-}
-```
-
-`while` represents a loop type, a way to repeat operations *while* its condition is true.
-
-In this case, the loop will never run (and nothing will be printed), because we used the `false` boolean value as the loop conditional. `true` would have resulted in a loop that keeps going forever, so be careful!
-
-The number `3.141592` is, as you may know, an approximation of mathematical PI to the first six digits. Rather than embed such a value, however, you would typically use the predefined `Math.PI` value for that purpose. Another variation on numbers is the `bigint` (big-integer) primitive type, which is used for storing arbitrarily large numbers.
-
-Numbers are most often used in programs for counting steps, such as loop iterations, and accessing information in numeric positions (i.e., an array index). We'll cover arrays/objects in a little bit, but as an example, if there was an array called `names`, we could access the element in its second position like this:
-
-```js
-console.log(`My name is ${ names[1] }.`);
-// My name is Kyle.
-```
-
-We used `1` for the element in the second position, instead of `2`, because like in most programming languages, JS array indices are 0-based (`0` is the first position).
+**interpolation**.
 
 In addition to strings, numbers, and booleans, two other *primitive* values in JS programs are `null` and `undefined`. While there are differences between them (some historic and some contemporary), for the most part both values serve the purpose of indicating *emptiness* (or absence) of a value.
 
@@ -123,62 +42,20 @@ You won't encounter direct usage of symbols very often in typical JS programs. T
 
 Besides primitives, the other value type in JS is an object value.
 
-As mentioned earlier, arrays are a special type of object that's comprised of an ordered and numerically indexed list of data:
-
-```js
-var names = [ "Frank", "Kyle", "Peter", "Susan" ];
-
-names.length;
-// 4
-
-names[0];
-// Frank
-
-names[1];
-// Kyle
-```
-
 JS arrays can hold any value type, either primitive or object (including other arrays). As we'll see toward the end of Chapter 3, even functions are values that can be held in arrays or objects.
-
-| NOTE: |
-| :--- |
-| Functions, like arrays, are a special kind (aka, sub-type) of object. We'll cover functions in more detail in a bit. |
 
 Objects are more general: an unordered, keyed collection of any various values. In other words, you access the element by a string location name (aka "key" or "property") rather than by its numeric position (as with arrays). For example:
 
-```js
-var me = {
-    first: "Kyle",
-    last: "Simpson",
-    age: 39,
-    specialties: [ "JS", "Table Tennis" ]
-};
-
-console.log(`My name is ${ me.first }.`);
-```
-
-Here, `me` represents an object, and `first` represents the name of a location of information in that object (value collection). Another syntax option that accesses information in an object by its property/key uses the square-brackets `[ ]`, such as  `me["first"]`.
 
 ### Value Type Determination
 
-For distinguishing values, the `typeof` operator tells you its built-in type, if primitive, or `"object"` otherwise:
-
-```js
-typeof 42;                  // "number"
-typeof "abc";               // "string"
-typeof true;                // "boolean"
-typeof undefined;           // "undefined"
-typeof null;                // "object" -- oops, bug!
-typeof { "a": 1 };          // "object"
-typeof [1,2,3];             // "object"
-typeof function hello(){};  // "function"
-```
+the `typeof` operator tells you its built-in type, if primitive, or `"object"` otherwise:
 
 | WARNING: |
 | :--- |
 | `typeof null` unfortunately returns `"object"` instead of the expected `"null"`. Also, `typeof` returns the specific `"function"` for functions, but not the expected `"array"` for arrays. |
 
-Converting from one value type to another, such as from string to number, is referred to in JS as "coercion." We'll cover this in more detail later in this chapter.
+Converting from one value type to another, such as from string to number, is referred to in JS as "coercion." 
 
 Primitive values and object values behave differently when they're assigned or passed around. We'll cover these details in Appendix A, "Values vs References."
 
