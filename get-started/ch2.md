@@ -16,69 +16,9 @@ Though you wouldn't typically think about a module—a collection of state and p
 
 Values come in two forms in JS: **primitive** and **object**. Values are embedded in programs using *literals*:
 
-**interpolation**.
-
-In addition to strings, numbers, and booleans, two other *primitive* values in JS programs are `null` and `undefined`. While there are differences between them (some historic and some contemporary), for the most part both values serve the purpose of indicating *emptiness* (or absence) of a value.
-
-Many developers prefer to treat them both consistently in this fashion, which is to say that the values are assumed to be indistinguishable. If care is taken, this is often possible. However, it's safest and best to use only `undefined` as the single empty value, even though `null` seems attractive in that it's shorter to type!
-
-```js
-while (value != undefined) {
-    console.log("Still got something!");
-}
-```
-
-The final primitive value to be aware of is a symbol, which is a special-purpose value that behaves as a hidden unguessable value. Symbols are almost exclusively used as special keys on objects:
-
-```js
-hitchhikersGuide[ Symbol("meaning of life") ];
-// 42
-```
-
-You won't encounter direct usage of symbols very often in typical JS programs. They're mostly used in low-level code such as in libraries and frameworks.
-
-### Arrays And Objects
-
-Besides primitives, the other value type in JS is an object value.
-
-JS arrays can hold any value type, either primitive or object (including other arrays). As we'll see toward the end of Chapter 3, even functions are values that can be held in arrays or objects.
-
-Objects are more general: an unordered, keyed collection of any various values. In other words, you access the element by a string location name (aka "key" or "property") rather than by its numeric position (as with arrays). For example:
-
-
-### Value Type Determination
-
-the `typeof` operator tells you its built-in type, if primitive, or `"object"` otherwise:
-
-| WARNING: |
-| :--- |
-| `typeof null` unfortunately returns `"object"` instead of the expected `"null"`. Also, `typeof` returns the specific `"function"` for functions, but not the expected `"array"` for arrays. |
-
-Converting from one value type to another, such as from string to number, is referred to in JS as "coercion." 
-
-Primitive values and object values behave differently when they're assigned or passed around. We'll cover these details in Appendix A, "Values vs References."
-
 ## Declaring and Using Variables
 
-To be explicit about something that may not have been obvious in the previous section: in JS programs, values can either appear as literal values (as many of the preceding examples illustrate), or they can be held in variables; think of variables as just containers for values.
-
-Variables have to be declared (created) to be used. There are various syntax forms that declare variables (aka, "identifiers"), and each form has different implied behaviors.
-
-For example, consider the `var` statement:
-
-```js
-var myName = "Kyle";
-var age;
-```
-
-The `var` keyword declares a variable to be used in that part of the program, and optionally allows an initial assignment of a value.
-
-Another similar keyword is `let`:
-
-```js
-let myName = "Kyle";
-let age;
-```
+values can either appear as literal values (as many of the preceding examples illustrate), or they can be held in variables; think of variables as just containers for values.
 
 The `let` keyword has some differences to `var`, with the most obvious being that `let` allows a more limited access to the variable than `var`. This is called "block scoping" as opposed to regular or function scoping.
 
@@ -100,74 +40,23 @@ console.log(age);
 // Error!
 ```
 
-The attempt to access `age` outside of the `if` statement results in an error, because `age` was block-scoped to the `if`, whereas `myName` was not.
-
 Block-scoping is very useful for limiting how widespread variable declarations are in our programs, which helps prevent accidental overlap of their names.
 
-But `var` is still useful in that it communicates "this variable will be seen by a wider scope (of the whole function)". Both declaration forms can be appropriate in any given part of a program, depending on the circumstances.
+But `var` is still useful in that it communicates "this variable will be seen by a wider scope (of the whole function)". 
 
 | NOTE: |
 | :--- |
-| It's very common to suggest that `var` should be avoided in favor of `let` (or `const`!), generally because of perceived confusion over how the scoping behavior of `var` has worked since the beginning of JS. I believe this to be overly restrictive advice and ultimately unhelpful. It's assuming you are unable to learn and use a feature properly in combination with other features. I believe you *can* and *should* learn any features available, and use them where appropriate! |
+| It's very common to suggest that `var` should be avoided in favor of `let` (or `const`!), generally because of perceived confusion over how the scoping behavior of `var` has worked since the beginning of JS. I believe this to be overly restrictive advice and ultimately unhelpful. I believe you *can* and *should* learn any features available, and use them where appropriate! |
 
 A third declaration form is `const`. It's like `let` but has an additional limitation that it must be given a value at the moment it's declared, and cannot be re-assigned a different value later.
 
-Consider:
-
-```js
-const myBirthday = true;
-let age = 39;
-
-if (myBirthday) {
-    age = age + 1;    // OK!
-    myBirthday = false;  // Error!
-}
-```
-
-The `myBirthday` constant is not allowed to be re-assigned.
-
 `const` declared variables are not "unchangeable", they just cannot be re-assigned. It's ill-advised to use `const` with object values, because those values can still be changed even though the variable can't be re-assigned. This leads to potential confusion down the line, so I think it's wise to avoid situations like:
 
-```js
-const actors = [
-    "Morgan Freeman", "Jennifer Aniston"
-];
-
-actors[2] = "Tom Cruise";   // OK :(
-actors = [];                // Error!
-```
-
-The best semantic use of a `const` is when you have a simple primitive value that you want to give a useful name to, such as using `myBirthday` instead of `true`. This makes programs easier to read.
+The best semantic use of a `const` is when you have a simple primitive value that you want to give a useful name to.
 
 | TIP: |
 | :--- |
 | If you stick to using `const` only with primitive values, you avoid any confusion of re-assignment (not allowed) vs. mutation (allowed)! That's the safest and best way to use `const`. |
-
-Besides `var` / `let` / `const`, there are other syntactic forms that declare identifiers (variables) in various scopes. For example:
-
-```js
-function hello(myName) {
-    console.log(`Hello, ${ myName }.`);
-}
-
-hello("Kyle");
-// Hello, Kyle.
-```
-
-The identifier `hello` is created in the outer scope, and it's also automatically associated so that it references the function. But the named parameter `myName` is created only inside the function, and thus is only accessible inside that function's scope. `hello` and `myName` generally behave as `var`-declared.
-
-Another syntax that declares a variable is a `catch` clause:
-
-```js
-try {
-    someError();
-}
-catch (err) {
-    console.log(err);
-}
-```
-
-The `err` is a block-scoped variable that exists only inside the `catch` clause, as if it had been declared with `let`.
 
 ## Functions
 
