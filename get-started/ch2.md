@@ -60,12 +60,6 @@ The best semantic use of a `const` is when you have a simple primitive value tha
 
 ## Functions
 
-The word "function" has a variety of meanings in programming. For example, in the world of Functional Programming, "function" has a precise mathematical definition and implies a strict set of rules to abide by.
-
-In JS, we should consider "function" to take the broader meaning of another related term: "procedure." A procedure is a collection of statements that can be invoked one or more times, may be provided some inputs, and may give back one or more outputs.
-
-From the early days of JS, function definition looked like:
-
 ```js
 function awesomeFunction(coolThings) {
     // ..
@@ -88,72 +82,13 @@ var awesomeFunction = function(coolThings) {
 
 This function is an expression that is assigned to the variable `awesomeFunction`. Different from the function declaration form, a function expression is not associated with its identifier until that statement during runtime.
 
-It's extremely important to note that in JS, functions are values that can be assigned (as shown in this snippet) and passed around. In fact, JS functions are a special type of the object value type. Not all languages treat functions as values, but it's essential for a language to support the functional programming pattern, as JS does.
-
-JS functions can receive parameter input:
-
-```js
-function greeting(myName) {
-    console.log(`Hello, ${ myName }!`);
-}
-
-greeting("Kyle");   // Hello, Kyle!
-```
-
-In this snippet, `myName` is called a parameter, which acts as a local variable inside the function. Functions can be defined to receive any number of parameters, from none upward, as you see fit. Each parameter is assigned the argument value that you pass in that position (`"Kyle"`, here) of the call.
-
-Functions also can return values using the `return` keyword:
-
-```js
-function greeting(myName) {
-    return `Hello, ${ myName }!`;
-}
-
-var msg = greeting("Kyle");
-
-console.log(msg);   // Hello, Kyle!
-```
-
-You can only `return` a single value, but if you have more values to return, you can wrap them up into a single object/array.
-
-Since functions are values, they can be assigned as properties on objects:
-
-```js
-var whatToSay = {
-    greeting() {
-        console.log("Hello!");
-    },
-    question() {
-        console.log("What's your name?");
-    },
-    answer() {
-        console.log("My name is Kyle.");
-    }
-};
-
-whatToSay.greeting();
-// Hello!
-```
-
-In this snippet, references to three functions (`greeting()`, `question()`, and `answer()`) are included in the object held by `whatToSay`. Each function can be called by accessing the property to retrieve the function reference value. Compare this straightforward style of defining functions on an object to the more sophisticated `class` syntax discussed later in this chapter.
-
-There are many varied forms that `function`s take in JS. We dig into these variations in Appendix A, "So Many Function Forms."
+It's extremely important to note that in JS, functions are values that can be assigned (as shown in this snippet) and passed around. In fact, JS functions are a special type of the object value type.
 
 ## Comparisons
 
-Making decisions in programs requires comparing values to determine their identity and relationship to each other. JS has several mechanisms to enable value comparison, so let's take a closer look at them.
-
 ### Equal...ish
 
-The most common comparison in JS programs asks the question, "Is this X value *the same as* that Y value?" What exactly does "the same as" really mean to JS, though?
-
-For ergonomic and historical reasons, the meaning is more complicated than the obvious *exact identity* sort of matching. Sometimes an equality comparison intends *exact* matching, but other times the desired comparison is a bit broader, allowing *closely similar* or *interchangeable* matching. In other words, we must be aware of the nuanced differences between an **equality** comparison and an **equivalence** comparison.
-
-If you've spent any time working with and reading about JS, you've certainly seen the so-called "triple-equals" `===` operator, also described as the "strict equality" operator. That seems rather straightforward, right? Surely, "strict" means strict, as in narrow and *exact*.
-
-Not *exact*ly.
-
-Yes, most values participating in an `===` equality comparison will fit with that *exact same* intuition. Consider some examples:
+"triple-equals" `===` operator, also described as the "strict equality" operator. 
 
 ```js
 3 === 3.0;              // true
@@ -171,20 +106,16 @@ null === undefined;     // false
 
 | NOTE: |
 | :--- |
-| Another way `===`'s equality comparison is often described is, "checking both the value and the type". In several of the examples we've looked at so far, like `42 === "42"`, the *type* of both values (number, string, etc.) does seem to be the distinguishing factor. There's more to it than that, though. **All** value comparisons in JS consider the type of the values being compared, not *just* the `===` operator. Specifically, `===` disallows any sort of type conversion (aka, "coercion") in its comparison, where other JS comparisons *do* allow coercion. |
-
-But the `===` operator does have some nuance to it, a fact many JS developers gloss over, to their detriment. The `===` operator is designed to *lie* in two cases of special values: `NaN` and `-0`. Consider:
+| Another way `===`'s equality comparison is often described is, "checking both the value and the type".
 
 ```js
 NaN === NaN;            // false
 0 === -0;               // true
 ```
 
-In the case of `NaN`, the `===` operator *lies* and says that an occurrence of `NaN` is not equal to another `NaN`. In the case of `-0` (yes, this is a real, distinct value you can use intentionally in your programs!), the `===` operator *lies* and says it's equal to the regular `0` value.
+In the case of `NaN`, the `===` operator *lies* and says that an occurrence of `NaN` is not equal to another `NaN`
 
 Since the *lying* about such comparisons can be bothersome, it's best to avoid using `===` for them. For `NaN` comparisons, use the `Number.isNaN(..)` utility, which does not *lie*. For `-0` comparison, use the `Object.is(..)` utility, which also does not *lie*. `Object.is(..)` can also be used for non-*lying* `NaN` checks, if you prefer. Humorously, you could think of `Object.is(..)` as the "quadruple-equals" `====`, the really-really-strict comparison!
-
-There are deeper historical and technical reasons for these *lies*, but that doesn't change the fact that `===` is not actually *strictly exactly equal* comparison, in the *strictest* sense.
 
 The story gets even more complicated when we consider comparisons of object values (non-primitives). Consider:
 
@@ -193,66 +124,33 @@ The story gets even more complicated when we consider comparisons of object valu
 { a: 42 } === { a: 42 }         // false
 (x => x * 2) === (x => x * 2)   // false
 ```
-
-What's going on here?
-
-It may seem reasonable to assume that an equality check considers the *nature* or *contents* of the value; after all, `42 === 42` considers the actual `42` value and compares it. But when it comes to objects, a content-aware comparison is generally referred to as "structural equality."
-
-JS does not define `===` as *structural equality* for object values. Instead, `===` uses *identity equality* for object values.
-
-In JS, all object values are held by reference (see "Values vs References" in Appendix A), are assigned and passed by reference-copy, **and** to our current discussion, are compared by reference (identity) equality. Consider:
+But when it comes to objects, a content-aware comparison is generally referred to as "structural equality." JS does not define `===` as *structural equality* for object values. Instead, `===` uses *identity equality* for object values.
 
 ```js
 var x = [ 1, 2, 3 ];
-
-// assignment is by reference-copy, so
-// y references the *same* array as x,
-// not another copy of it.
 var y = x;
 
 y === x;              // true
 y === [ 1, 2, 3 ];    // false
 x === [ 1, 2, 3 ];    // false
 ```
-
-In this snippet, `y === x` is true because both variables hold a reference to the same initial array. But the `=== [1,2,3]` comparisons both fail because `y` and `x`, respectively, are being compared to new *different* arrays `[1,2,3]`. The array structure and contents don't matter in this comparison, only the **reference identity**.
+The array structure and contents don't matter in this comparison, only the **reference identity**.
 
 JS does not provide a mechanism for structural equality comparison of object values, only reference identity comparison. To do structural equality comparison, you'll need to implement the checks yourself.
 
-But beware, it's more complicated than you'll assume. For example, how might you determine if two function references are "structurally equivalent"? Even stringifying to compare their source code text wouldn't take into account things like closure. JS doesn't provide structural equality comparison because it's almost intractable to handle all the corner cases!
-
 ### Coercive Comparisons
 
-Coercion means a value of one type being converted to its respective representation in another type (to whatever extent possible). As we'll discuss in Chapter 4, coercion is a core pillar of the JS language, not some optional feature that can reasonably be avoided.
-
-But where coercion meets comparison operators (like equality), confusion and frustration unfortunately crop up more often than not.
-
-Few JS features draw more ire in the broader JS community than the `==` operator, generally referred to as the "loose equality" operator. The majority of all writing and public discourse on JS condemns this operator as poorly designed and dangerous/bug-ridden when used in JS programs. Even the creator of the language himself, Brendan Eich, has lamented how it was designed as a big mistake.
-
-From what I can tell, most of this frustration comes from a pretty short list of confusing corner cases, but a deeper problem is the extremely widespread misconception that it performs its comparisons without considering the types of its compared values.
+Coercion means a value of one type being converted to its respective representation in another type (to whatever extent possible). 
 
 The `==` operator performs an equality comparison similarly to how the `===` performs it. In fact, both operators consider the type of the values being compared. And if the comparison is between the same value type, both `==` and `===` **do exactly the same thing, no difference whatsoever.**
 
 If the value types being compared are different, the `==` differs from `===` in that it allows coercion before the comparison. In other words, they both want to compare values of like types, but `==` allows type conversions *first*, and once the types have been converted to be the same on both sides, then `==` does the same thing as `===`. Instead of "loose equality," the `==` operator should be described as "coercive equality."
 
-Consider:
-
 ```js
 42 == "42";             // true
 1 == true;              // true
 ```
-
-In both comparisons, the value types are different, so the `==` causes the non-number values (`"42"` and `true`) to be converted to numbers (`42` and `1`, respectively) before the comparisons are made.
-
-Just being aware of this nature of `==`—that it prefers primitive numeric comparisons—helps you avoid most of the troublesome corner cases, such as staying away from a gotchas like `"" == 0` or `0 == false`.
-
-You may be thinking, "Oh, well, I will just always avoid any coercive equality comparison (using `===` instead) to avoid those corner cases"! Eh, sorry, that's not quite as likely as you would hope.
-
-There's a pretty good chance that you'll use relational comparison operators like `<`, `>` (and even `<=` and `>=`).
-
-Just like `==`, these operators will perform as if they're "strict" if the types being relationally compared already match, but they'll allow coercion first (generally, to numbers) if the types differ.
-
-Consider:
+You may be thinking, "Oh, well, I will just always avoid any coercive equality comparison (using `===` instead) to avoid those corner cases"! Eh, sorry, that's not quite as likely as you would hope. There's a pretty good chance that you'll use relational comparison operators like `<`, `>` (and even `<=` and `>=`).
 
 ```js
 var arr = [ "1", "10", "100", "1000" ];
@@ -260,8 +158,6 @@ for (let i = 0; i < arr.length && arr[i] < 500; i++) {
     // will run 3 times
 }
 ```
-
-The `i < arr.length` comparison is "safe" from coercion because `i` and `arr.length` are always numbers. The `arr[i] < 500` invokes coercion, though, because the `arr[i]` values are all strings. Those comparisons thus become `1 < 500`, `10 < 500`, `100 < 500`, and `1000 < 500`. Since that fourth one is false, the loop stops after its third iteration.
 
 These relational operators typically use numeric comparisons, except in the case where **both** values being compared are already strings; in this case, they use alphabetical (dictionary-like) comparison of the strings:
 
@@ -272,17 +168,13 @@ var y = "9";
 x < y;      // true, watch out!
 ```
 
-There's no way to get these relational operators to avoid coercion, other than to just never use mismatched types in the comparisons. That's perhaps admirable as a goal, but it's still pretty likely you're going to run into a case where the types *may* differ.
+There's no way to get these relational operators to avoid coercion, other than to just never use mismatched types in the comparisons.
 
 The wiser approach is not to avoid coercive comparisons, but to embrace and learn their ins and outs.
-
-Coercive comparisons crop up in other places in JS, such as conditionals (`if`, etc.), which we'll revisit in Appendix A, "Coercive Conditional Comparison."
 
 ## How We Organize in JS
 
 Two major patterns for organizing code (data and behavior) are used broadly across the JS ecosystem: classes and modules. These patterns are not mutually exclusive; many programs can and do use both. Other programs will stick with just one pattern, or even neither!
-
-In some respects, these patterns are very different. But interestingly, in other ways, they're just different sides of the same coin. Being proficient in JS requires understanding both patterns and where they are appropriate (and not!).
 
 ### Classes
 
@@ -292,101 +184,13 @@ We will use a common and somewhat traditional definition here, the one most like
 
 A class in a program is a definition of a "type" of custom data structure that includes both data and behaviors that operate on that data. Classes define how such a data structure works, but classes are not themselves concrete values. To get a concrete value that you can use in the program, a class must be *instantiated* (with the `new` keyword) one or more times.
 
-Consider:
-
-```js
-class Page {
-    constructor(text) {
-        this.text = text;
-    }
-
-    print() {
-        console.log(this.text);
-    }
-}
-
-class Notebook {
-    constructor() {
-        this.pages = [];
-    }
-
-    addPage(text) {
-        var page = new Page(text);
-        this.pages.push(page);
-    }
-
-    print() {
-        for (let page of this.pages) {
-            page.print();
-        }
-    }
-}
-
-var mathNotes = new Notebook();
-mathNotes.addPage("Arithmetic: + - * / ...");
-mathNotes.addPage("Trigonometry: sin cos tan ...");
-
-mathNotes.print();
-// ..
-```
-
-In the `Page` class, the data is a string of text stored in a `this.text` member property. The behavior is `print()`, a method that dumps the text to the console.
-
-For the `Notebook` class, the data is an array of `Page` instances. The behavior is `addPage(..)`, a method that instantiates new `Page` pages and adds them to the list, as well as `print()` (which prints out all the pages in the notebook).
-
-The statement `mathNotes = new Notebook()` creates an instance of the `Notebook` class, and `page = new Page(text)` is where instances of the `Page` class are created.
-
 Behavior (methods) can only be called on instances (not the classes themselves), such as `mathNotes.addPage(..)` and `page.print()`.
-
-The `class` mechanism allows packaging data (`text` and `pages`) to be organized together with their behaviors (e.g., `addPage(..)` and `print()`). The same program could have been built without any `class` definitions, but it would likely have been much less organized, harder to read and reason about, and more susceptible to bugs and subpar maintenance.
 
 #### Class Inheritance
 
 Another aspect inherent to traditional "class-oriented" design, though a bit less commonly used in JS, is "inheritance" (and "polymorphism"). Consider:
 
 ```js
-class Publication {
-    constructor(title,author,pubDate) {
-        this.title = title;
-        this.author = author;
-        this.pubDate = pubDate;
-    }
-
-    print() {
-        console.log(`
-            Title: ${ this.title }
-            By: ${ this.author }
-            ${ this.pubDate }
-        `);
-    }
-}
-```
-
-This `Publication` class defines a set of common behavior that any publication might need.
-
-Now let's consider more specific types of publication, like `Book` and `BlogPost`:
-
-```js
-class Book extends Publication {
-    constructor(bookDetails) {
-        super(
-            bookDetails.title,
-            bookDetails.author,
-            bookDetails.publishedOn
-        );
-        this.publisher = bookDetails.publisher;
-        this.ISBN = bookDetails.ISBN;
-    }
-
-    print() {
-        super.print();
-        console.log(`
-            Publisher: ${ this.publisher }
-            ISBN: ${ this.ISBN }
-        `);
-    }
-}
-
 class BlogPost extends Publication {
     constructor(title,author,pubDate,URL) {
         super(title,author,pubDate);
@@ -398,40 +202,6 @@ class BlogPost extends Publication {
         console.log(this.URL);
     }
 }
-```
-
-Both `Book` and `BlogPost` use the `extends` clause to *extend* the general definition of `Publication` to include additional behavior. The `super(..)` call in each constructor delegates to the parent `Publication` class's constructor for its initialization work, and then they do more specific things according to their respective publication type (aka, "sub-class" or "child class").
-
-Now consider using these child classes:
-
-```js
-var YDKJS = new Book({
-    title: "You Don't Know JS",
-    author: "Kyle Simpson",
-    publishedOn: "June 2014",
-    publisher: "O'Reilly",
-    ISBN: "123456-789"
-});
-
-YDKJS.print();
-// Title: You Don't Know JS
-// By: Kyle Simpson
-// June 2014
-// Publisher: O'Reilly
-// ISBN: 123456-789
-
-var forAgainstLet = new BlogPost(
-    "For and against let",
-    "Kyle Simpson",
-    "October 27, 2014",
-    "https://davidwalsh.name/for-and-against-let"
-);
-
-forAgainstLet.print();
-// Title: For and against let
-// By: Kyle Simpson
-// October 27, 2014
-// https://davidwalsh.name/for-and-against-let
 ```
 
 Notice that both child class instances have a `print()` method, which was an override of the *inherited* `print()` method from the parent `Publication` class. Each of those overridden child class `print()` methods call `super.print()` to invoke the inherited version of the `print()` method.
@@ -448,13 +218,11 @@ But modules have some important differences from classes. Most notably, the synt
 
 #### Classic Modules
 
-ES6 added a module syntax form to native JS syntax, which we'll look at in a moment. But from the early days of JS, modules was an important and common pattern that was leveraged in countless JS programs, even without a dedicated syntax.
+ES6 added a module syntax form to native JS syntax, which we'll look at in a moment. 
 
 The key hallmarks of a *classic module* are an outer function (that runs at least once), which returns an "instance" of the module with one or more functions exposed that can operate on the module instance's internal (hidden) data.
 
 Because a module of this form is *just a function*, and calling it produces an "instance" of the module, another description for these functions is "module factories".
-
-Consider the classic module form of the earlier `Publication`, `Book`, and `BlogPost` classes:
 
 ```js
 function Publication(title,author,pubDate) {
@@ -551,84 +319,12 @@ The only observable difference here is the lack of using `new`, calling the modu
 
 ES modules (ESM), introduced to the JS language in ES6, are meant to serve much the same spirit and purpose as the existing *classic modules* just described, especially taking into account important variations and use cases from AMD, UMD, and CommonJS.
 
-The implementation approach does, however, differ significantly.
-
 First, there's no wrapping function to *define* a module. The wrapping context is a file. ESMs are always file-based; one file, one module.
 
 Second, you don't interact with a module's "API" explicitly, but rather use the `export` keyword to add a variable or method to its public API definition. If something is defined in a module but not `export`ed, then it stays hidden (just as with *classic modules*).
 
 Third, and maybe most noticeably different from previously discussed patterns, you don't "instantiate" an ES module, you just `import` it to use its single instance. ESMs are, in effect, "singletons," in that there's only one instance ever created, at first `import` in your program, and all other `import`s just receive a reference to that same single instance. If your module needs to support multiple instantiations, you have to provide a *classic module-style* factory function on your ESM definition for that purpose.
 
-In our running example, we do assume multiple-instantiation, so these following snippets will mix both ESM and *classic modules*.
-
-Consider the file `publication.js`:
-
-```js
-function printDetails(title,author,pubDate) {
-    console.log(`
-        Title: ${ title }
-        By: ${ author }
-        ${ pubDate }
-    `);
-}
-
-export function create(title,author,pubDate) {
-    var publicAPI = {
-        print() {
-            printDetails(title,author,pubDate);
-        }
-    };
-
-    return publicAPI;
-}
-```
-
-To import and use this module, from another ES module like `blogpost.js`:
-
-```js
-import { create as createPub } from "publication.js";
-
-function printDetails(pub,URL) {
-    pub.print();
-    console.log(URL);
-}
-
-export function create(title,author,pubDate,URL) {
-    var pub = createPub(title,author,pubDate);
-
-    var publicAPI = {
-        print() {
-            printDetails(pub,URL);
-        }
-    };
-
-    return publicAPI;
-}
-```
-
-And finally, to use this module, we import into another ES module like `main.js`:
-
-```js
-import { create as newBlogPost } from "blogpost.js";
-
-var forAgainstLet = newBlogPost(
-    "For and against let",
-    "Kyle Simpson",
-    "October 27, 2014",
-    "https://davidwalsh.name/for-and-against-let"
-);
-
-forAgainstLet.print();
-// Title: For and against let
-// By: Kyle Simpson
-// October 27, 2014
-// https://davidwalsh.name/for-and-against-let
-```
-
-| NOTE: |
-| :--- |
-| The `as newBlogPost` clause in the `import` statement is optional; if omitted, a top-level function just named `create(..)` would be imported. In this case, I'm renaming it for readability's sake; its more generic factory name of `create(..)` becomes more semantically descriptive of its purpose as `newBlogPost(..)`. |
-
-As shown, ES modules can use *classic modules* internally if they need to support multiple-instantiation. Alternatively, we could have exposed a `class` from our module instead of a `create(..)` factory function, with generally the same outcome. However, since you're already using ESM at that point, I'd recommend sticking with *classic modules* instead of `class`.
+ES modules can use *classic modules* internally if they need to support multiple-instantiation. Alternatively, we could have exposed a `class` from our module instead of a `create(..)` factory function, with generally the same outcome. However, since you're already using ESM at that point, I'd recommend sticking with *classic modules* instead of `class`.
 
 If your module only needs a single instance, you can skip the extra layers of complexity: `export` its public methods directly.
