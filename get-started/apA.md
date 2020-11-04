@@ -1,13 +1,6 @@
-# You Don't Know JS Yet: Get Started - 2nd Edition
-# Appendix A: Exploring Further
-
-In this appendix, we're going to explore some topics from the main chapter text in a bit more detail. Think of this content as an optional preview of some of the more nuanced details covered throughout the rest of the book series.
-
 ## Values vs. References
 
-In Chapter 2, we introduced the two main types of values: primitives and objects. But we didn't discuss yet one key difference between the two: how these values are assigned and passed around.
-
-In many languages, the developer can choose between assigning/passing a value as the value itself, or as a reference to the value. In JS, however, this decision is entirely determined by the kind of value. That surprises a lot of developers from other languages when they start using JS.
+In many languages, the developer can choose between assigning/passing a value as the value itself, or as a reference to the value. In JS, however, this decision is entirely determined by the kind of values. JS chooses the value-copy vs. reference-copy behavior based on the value type. Primitives are held by value, objects are held by reference. 
 
 If you assign/pass a value itself, the value is copied. For example:
 
@@ -19,47 +12,7 @@ var yourName = myName;
 
 Here, the `yourName` variable has a separate copy of the `"Kyle"` string from the value that's stored in `myName`. That's because the value is a primitive, and primitive values are always assigned/passed as **value copies**.
 
-Here's how you can prove there's two separate values involved:
-
-```js
-var myName = "Kyle";
-
-var yourName = myName;
-
-myName = "Frank";
-
-console.log(myName);
-// Frank
-
-console.log(yourName);
-// Kyle
-```
-
-See how `yourName` wasn't affected by the re-assignment of `myName` to `"Frank"`? That's because each variable holds its own copy of the value.
-
 By contrast, references are the idea that two or more variables are pointing at the same value, such that modifying this shared value would be reflected by an access via any of those references. In JS, only object values (arrays, objects, functions, etc.) are treated as references.
-
-Consider:
-
-```js
-var myAddress = {
-    street: "123 JS Blvd",
-    city: "Austin",
-    state: "TX"
-};
-
-var yourAddress = myAddress;
-
-// I've got to move to a new house!
-myAddress.street = "456 TS Ave";
-
-console.log(yourAddress.street);
-// 456 TS Ave
-```
-
-Because the value assigned to `myAddress` is an object, it's held/assigned by reference, and thus the assignment to the `yourAddress` variable is a copy of the reference, not the object value itself. That's why the updated value assigned to the `myAddress.street` is reflected when we access `yourAddress.street`. `myAddress` and `yourAddress` have copies of the reference to the single shared object, so an update to one is an update to both.
-
-Again, JS chooses the value-copy vs. reference-copy behavior based on the value type. Primitives are held by value, objects are held by reference. There's no way to override this in JS, in either direction.
 
 ## So Many Function Forms
 
@@ -182,40 +135,6 @@ Phew! That's a lot of different ways to define functions.
 There's no simple shortcut path here; you just have to build familiarity with all the function forms so you can recognize them in existing code and use them appropriately in the code you write. Study them closely and practice!
 
 ## Coercive Conditional Comparison
-
-Yes, that section name is quite a mouthful. But what are we talking about? We're talking about conditional expressions needing to perform coercion-oriented comparisons to make their decisions.
-
-`if` and `? :`-ternary statements, as well as the test clauses in `while` and `for` loops, all perform an implicit value comparison. But what sort? Is it "strict" or "coercive"? Both, actually.
-
-Consider:
-
-```js
-var x = 1;
-
-if (x) {
-    // will run!
-}
-
-while (x) {
-    // will run, once!
-    x = false;
-}
-```
-
-You might think of these `(x)` conditional expressions like this:
-
-```js
-var x = 1;
-
-if (x == true) {
-    // will run!
-}
-
-while (x == true) {
-    // will run, once!
-    x = false;
-}
-```
 
 In this specific case -- the value of `x` being `1` -- that mental model works, but it's not accurate more broadly. Consider:
 
