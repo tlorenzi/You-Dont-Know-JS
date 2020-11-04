@@ -8,8 +8,6 @@ ES6 standardized a specific protocol for the iterator pattern directly in the la
 
 ### Consuming Iterators
 
-With the ES6 iteration protocol in place, it's workable to consume a data source one value at a time, checking after each `next()` call for `done` to be `true` to stop the iteration. But this approach is rather manual, so ES6 also included several mechanisms (syntax and APIs) for standardized consumption of these iterators.
-
 One such mechanism is the `for..of` loop:
 
 ```js
@@ -20,9 +18,6 @@ var it = /* .. */;
 for (let val of it) {
     console.log(`Iterator value: ${ val }`);
 }
-// Iterator value: ..
-// Iterator value: ..
-// ..
 ```
 
 | NOTE: |
@@ -32,26 +27,6 @@ for (let val of it) {
 Another mechanism that's often used for consuming iterators is the `...` operator. This operator actually has two symmetrical forms: *spread* and *rest* (or *gather*, as I prefer). The *spread* form is an iterator-consumer.
 
 To *spread* an iterator, you have to have *something* to spread it into. There are two possibilities in JS: an array or an argument list for a function call.
-
-An array spread:
-
-```js
-// spread an iterator into an array,
-// with each iterated value occupying
-// an array element position.
-var vals = [ ...it ];
-```
-
-A function call spread:
-
-```js
-// spread an iterator into a function,
-// call with each iterated value
-// occupying an argument position.
-doSomethingUseful( ...it );
-```
-
-In both cases, the iterator-spread form of `...` follows the iterator-consumption protocol (the same as the `for..of` loop) to retrieve all available values from an iterator and place (aka, spread) them into the receiving context (array, argument list).
 
 ### Iterables
 
