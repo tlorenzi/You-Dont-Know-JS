@@ -4,10 +4,6 @@
 
 -----
 
-**[Purchase ebook/PDF from Leanpub](https://leanpub.com/ydkjsy-get-started)**
-
------
-
 [Table of Contents](toc.md)
 
 * [Foreword](foreword.md) (by [Brian Holt](https://twitter.com/holtbt))
@@ -16,4 +12,3 @@
 * [Chapter 2: Surveying JS](ch2.md)
 * [Chapter 3: Digging to the Roots of JS](ch3.md)
 * [Appendix A: Exploring Further](apA.md)
-* [Appendix B: Practice, Practice, Practice!](apB.md)
