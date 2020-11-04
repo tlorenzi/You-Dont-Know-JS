@@ -30,95 +30,11 @@ To *spread* an iterator, you have to have *something* to spread it into. There a
 
 ### Iterables
 
-The iterator-consumption protocol is technically defined for consuming *iterables*; an iterable is a value that can be iterated over.
-
-The protocol automatically creates an iterator instance from an iterable, and consumes *just that iterator instance* to its completion. This means a single iterable could be consumed more than once; each time, a new iterator instance would be created and used.
-
-So where do we find iterables?
-
-ES6 defined the basic data structure/collection types in JS as iterables. This includes strings, arrays, maps, sets, and others.
-
-Consider:
-
-```js
-// an array is an iterable
-var arr = [ 10, 20, 30 ];
-
-for (let val of arr) {
-    console.log(`Array value: ${ val }`);
-}
-// Array value: 10
-// Array value: 20
-// Array value: 30
-```
-
 Since arrays are iterables, we can shallow-copy an array using iterator consumption via the `...` spread operator:
 
 ```js
 var arrCopy = [ ...arr ];
 ```
-
-We can also iterate the characters in a string one at a time:
-
-```js
-var greeting = "Hello world!";
-var chars = [ ...greeting ];
-
-chars;
-// [ "H", "e", "l", "l", "o", " ",
-//   "w", "o", "r", "l", "d", "!" ]
-```
-
-A `Map` data structure uses objects as keys, associating a value (of any type) with that object. Maps have a different default iteration than seen here, in that the iteration is not just over the map's values but instead its *entries*. An *entry* is a tuple (2-element array) including both a key and a value.
-
-Consider:
-
-```js
-// given two DOM elements, `btn1` and `btn2`
-
-var buttonNames = new Map();
-buttonNames.set(btn1,"Button 1");
-buttonNames.set(btn2,"Button 2");
-
-for (let [btn,btnName] of buttonNames) {
-    btn.addEventListener("click",function onClick(){
-        console.log(`Clicked ${ btnName }`);
-    });
-}
-```
-
-In the `for..of` loop over the default map iteration, we use the `[btn,btnName]` syntax (called "array destructuring") to break down each consumed tuple into the respective key/value pairs (`btn1` / `"Button 1"` and `btn2` / `"Button 2"`).
-
-Each of the built-in iterables in JS expose a default iteration, one which likely matches your intuition. But you can also choose a more specific iteration if necessary. For example, if we want to consume only the values of the above `buttonNames` map, we can call `values()` to get a values-only iterator:
-
-```js
-for (let btnName of buttonNames.values()) {
-    console.log(btnName);
-}
-// Button 1
-// Button 2
-```
-
-Or if we want the index *and* value in an array iteration, we can make an entries iterator with the `entries()` method:
-
-```js
-var arr = [ 10, 20, 30 ];
-
-for (let [idx,val] of arr.entries()) {
-    console.log(`[${ idx }]: ${ val }`);
-}
-// [0]: 10
-// [1]: 20
-// [2]: 30
-```
-
-For the most part, all built-in iterables in JS have three iterator forms available: keys-only (`keys()`), values-only (`values()`), and entries (`entries()`).
-
-Beyond just using built-in iterables, you can also ensure your own data structures adhere to the iteration protocol; doing so means you opt into the ability to consume your data with `for..of` loops and the `...` operator. "Standardizing" on this protocol means code that is overall more readily recognizable and readable.
-
-| NOTE: |
-| :--- |
-| You may have noticed a nuanced shift that occurred in this discussion. We started by talking about consuming **iterators**, but then switched to talking about iterating over **iterables**. The iteration-consumption protocol expects an *iterable*, but the reason we can provide a direct *iterator* is that an iterator is just an iterable of itself! When creating an iterator instance from an existing iterator, the iterator itself is returned. |
 
 ## Closure
 
