@@ -1,4 +1,3 @@
-# You Don't Know JS Yet: Get Started - 2nd Edition
 # Chapter 2: Surveying JS
 
 ## Each File is a Program
