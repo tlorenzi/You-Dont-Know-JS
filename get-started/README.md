@@ -3,9 +3,6 @@
 <img src="images/cover.png" width="300">
 
 -----
-
-[Table of Contents](toc.md)
-
 * [Foreword](foreword.md) (by [Brian Holt](https://twitter.com/holtbt))
 * [Chapter 1: What Is JavaScript?](ch1.md)
 * [Chapter 2: Surveying JS](ch2.md)
